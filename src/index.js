@@ -24,7 +24,9 @@ app.get('/signup',(req,res)=>{
 app.post("/signup",async(req,res)=>{
     const data = {
         name:req.body.name,
-        password:req.body.password
+        password:req.body.password,
+        email:req.body.email,
+        phonenumber:req.body.phonenumber,
     }
     await collection.insertMany([data])
     console.log(data);
@@ -45,7 +47,7 @@ app.post("/login",async(req,res)=>{
    }catch{
         res.send('worng details')
    }
-   
+
 })
 
 app.listen(3000 , ()=>{
