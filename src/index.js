@@ -3,30 +3,34 @@ const app = express();
 const path = require('path')
 const hbs = require('hbs')
 const collection = require('./mongodb')
-const templatePath=path.join(__dirname,'../templates')
+const templatePath = path.join(__dirname, '../templates')
 
 app.use(express.json())
 // to read from template
-app.set('view engine','hbs')
-app.set("views" , templatePath)
+app.set('view engine', 'hbs')
+app.set("views", templatePath)
 // app.use('/public', express.static(path.join(__dirname, 'public')))
 
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({ extended: false }))
 
-app.get('/',(req,res)=>{
-    res.render('login')
+app.get('/', (req,res)=>{
+    res.render('home');
 })
 
-app.get('/signup',(req,res)=>{
+app.get('/signup', (req, res) => {
     res.render('signup')
 })
 
-app.post("/signup",async(req,res)=>{
+app.get('/login', (req, res) => {
+    res.render('login')
+})
+
+app.post("/signup", async (req, res) => {
     const data = {
-        name:req.body.name,
-        password:req.body.password,
-        email:req.body.email,
-        phonenumber:req.body.phonenumber,
+        name: req.body.name,
+        password: req.body.password,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
     }
     await collection.insertMany([data])
     console.log(data);
@@ -34,22 +38,22 @@ app.post("/signup",async(req,res)=>{
 })
 
 
-app.post("/login",async(req,res)=>{
-   try{
-    const check = await collection.findOne({name:req.body.name})
-    if(check.password === req.body.password){
-        res.render("home")
-    }
-    else{
-        res.send("wrong password")
-    }
+app.post("/login", async (req, res) => {
+    try {
+        const check = await collection.findOne({ name: req.body.name })
+        if (check.password === req.body.password) {
+            res.render("home")
+        }
+        else {
+            res.send("wrong password")
+        }
 
-   }catch{
+    } catch {
         res.send('worng details')
-   }
+    }
 
 })
 
-app.listen(3000 , ()=>{
+app.listen(3000, () => {
     console.log("server is running on port 3000")
 })
