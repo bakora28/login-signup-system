@@ -1,8 +1,8 @@
-// Profile Management Routes - Enhanced with MongoDB
+// Profile Management Routes - Enhanced with MongoDB + AWS S3
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const { upload } = require('./upload-config');
+const { upload } = require('./upload-config'); // S3 multer upload
 const ProfileService = require('./profile-service');
 const Database = require('./database');
 
@@ -114,7 +114,7 @@ router.get('/dashboard', authenticateWeb, async (req, res) => {
     }
 });
 
-// API Routes
+// ===================== API Routes ===================== //
 
 // Get Profile Data
 router.get('/api/profile', authenticateToken, async (req, res) => {
@@ -133,25 +133,24 @@ router.get('/api/profile', authenticateToken, async (req, res) => {
     }
 });
 
-// Upload Profile Picture
+// Upload Profile Picture (S3)
 router.post('/api/profile/upload-picture', authenticateToken, upload.single('profilePicture'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        
-        // For local storage, create URL path
-        const fileName = req.file.filename;
-        const localPath = `/public/uploads/profile-pictures/${fileName}`;
-        
-        const profilePictureUrl = await ProfileService.updateProfilePicture(req.user.id, localPath);
-        
+
+        // File URL from S3
+        const s3Url = req.file.location;
+
+        // Save in MongoDB (or local service)
+        const profilePictureUrl = await ProfileService.updateProfilePicture(req.user.id, s3Url);
+
         res.json({
             success: true,
             message: 'Profile picture updated successfully',
             profilePictureUrl: profilePictureUrl
         });
-        
     } catch (error) {
         console.error('Error uploading profile picture:', error);
         res.status(500).json({ error: 'Failed to upload profile picture' });
@@ -167,14 +166,13 @@ router.post('/api/profile/update', authenticateToken, async (req, res) => {
         const allowedFields = ['name', 'email', 'phoneNumber', 'bio'];
         const updates = {};
         
-        // Filter to only allowed fields
         allowedFields.forEach(field => {
             if (req.body[field] !== undefined) {
                 updates[field] = req.body[field];
             }
         });
         
-        // Security: Block any attempts to modify restricted fields
+        // Security: Block restricted fields
         const restrictedFields = ['status', 'role', 'isActive', 'permissions'];
         const hasRestrictedFields = restrictedFields.some(field => req.body[field] !== undefined);
         
@@ -212,8 +210,7 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
     try {
         const { setting, value } = req.body;
         
-        // Security: Prevent users from changing account status via preferences
-        if (setting === 'status' || setting === 'role' || setting === 'active') {
+        if (['status', 'role', 'active'].includes(setting)) {
             return res.status(403).json({ 
                 error: 'Account status and role changes are restricted to administrators only' 
             });
@@ -224,7 +221,6 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
             return res.status(404).json({ error: 'Profile not found' });
         }
         
-        // Update preferences
         if (!profile.preferences) {
             profile.preferences = {};
         }
@@ -246,7 +242,7 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
     }
 });
 
-// Security Route: Block any user attempts to change account status
+// Security Routes
 router.put('/api/profile/status', authenticateToken, (req, res) => {
     res.status(403).json({ 
         success: false,
