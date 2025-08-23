@@ -1,0 +1,16 @@
+{
+  "userId": "333@333.com",
+  "name": "333",
+  "email": "333@333.com",
+  "phoneNumber": "01128658008",
+  "profilePicture": "/public/uploads/profile-pictures/333@333.com-1755919350539-893378097.jpg",
+  "bio": "",
+  "joinDate": "2025-08-23T03:22:26.223Z",
+  "lastLogin": "2025-08-23T03:22:26.223Z",
+  "isActive": true,
+  "preferences": {
+    "notifications": true,
+    "privacy": "public"
+  },
+  "updatedAt": "2025-08-23T03:22:30.542Z"
+}

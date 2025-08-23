@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - {{userName}}</title>
+    <link href="/public/css/welcome.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/chatbot.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>🎉 Welcome, {{userName}}!</h1>
+        <div class="welcome-message">
+            <p>Thank you for joining us! Your account has been successfully created.</p>
+            <p>We're excited to have you on board.</p>
+        </div>
+        
+        <div class="user-info">
+            <h3>Your Account Details:</h3>
+            <div class="info-item">
+                <strong>Name:</strong> {{userName}}
+            </div>
+            <div class="info-item">
+                <strong>Email:</strong> {{userEmail}}
+            </div>
+            <div class="info-item">
+                <strong>Phone:</strong> {{userPhone}}
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="window.location.href='/'" class="btn-home">
+                <i class="fas fa-home"></i> Go to Home
+            </button>
+            <button onclick="window.location.href='/profile/dashboard'" class="btn-dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button onclick="logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+        
+        // Welcome animation
+        window.onload = function() {
+            const container = document.querySelector('.welcome-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        }
+    </script>
+
+    <!-- Internal Chatbot Protection -->
+    <script src="/public/js/chatbot-blocker.js"></script>
+    
+    <!-- Internal Chatbot Widget -->
+    <script src="/public/js/chatbot.js"></script>
+</body>
+</html>

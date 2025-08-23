@@ -1,0 +1,16 @@
+{
+  "userId": "bakr@gmail.com",
+  "name": "bakr",
+  "email": "bakr@gmail.com",
+  "phoneNumber": "01128658008",
+  "profilePicture": "/public/uploads/profile-pictures/bakr@gmail.com-1755919091812-358826339.jpg",
+  "bio": "",
+  "joinDate": "2025-08-23T03:14:37.502Z",
+  "lastLogin": "2025-08-23T03:14:37.502Z",
+  "isActive": true,
+  "preferences": {
+    "notifications": true,
+    "privacy": "public"
+  },
+  "updatedAt": "2025-08-23T03:18:11.817Z"
+}

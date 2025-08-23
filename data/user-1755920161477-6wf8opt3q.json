@@ -1,0 +1,16 @@
+{
+  "userId": "user-1755920161477-6wf8opt3q",
+  "name": "fff",
+  "email": "fff@gmail.com",
+  "phoneNumber": "02739685721",
+  "profilePicture": "/public/uploads/profile-pictures/user-1755920161477-6wf8opt3q-1755920212736-18845079.jpg",
+  "bio": "",
+  "joinDate": "2025-08-23T03:36:46.359Z",
+  "lastLogin": "2025-08-23T03:36:46.359Z",
+  "isActive": true,
+  "preferences": {
+    "notifications": true,
+    "privacy": "public"
+  },
+  "updatedAt": "2025-08-23T03:36:52.739Z"
+}

@@ -4,15 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link href="../public/css/login.css" type="text/css" rel="stylesheet">
+    <link href="/public/css/login.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/chatbot.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <h2>Login</h2>
     <form action="/login" method="post">
-        <input type="text" name="name" placeholder="Name">
-        <input type="password" name="password" placeholder="Password">
-        <input type="submit">
+        <input type="email" name="email" placeholder="Email Address" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login" class="sub">
     </form>
     <a href="/signup">SignUp Now</a>
+
+    <!-- Need Help link -->
+    <div style="text-align: center; margin-top: 20px;">
+        <small style="color: #718096;">
+            Having trouble? 
+            <a href="#" onclick="openChatbotWithMessage('I need help logging in'); return false;" style="color: #667eea;">
+                Click here for help
+            </a>
+        </small>
+    </div>
+
+    <!-- Internal Chatbot Protection -->
+    <script src="/public/js/chatbot-blocker.js"></script>
+    
+    <!-- Internal Chatbot Widget -->
+    <script src="/public/js/chatbot.js"></script>
 </body>
 </html>

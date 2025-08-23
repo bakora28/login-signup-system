@@ -4,11 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="/public/css/home.css">
+    <link rel="stylesheet" href="/public/css/chatbot.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Home</h1>
-    <a href="/login">Login</a>
-    <a href="/signup">Register</a>
+    {{#if user}}
+        <!-- Logged in user navigation -->
+        <div class="user-nav">
+            <h1>Welcome back, {{user.name}}!</h1>
+            <div class="main-buttons">
+                <a href="/profile/dashboard" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="/logout" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+                <a href="/admin/login" class="btn btn-admin">🛡️ Admin Access</a>
+            </div>
+        </div>
+    {{else}}
+        <!-- Guest navigation -->
+        <h1>Home</h1>
+        <div class="main-buttons">
+            <a href="/login" class="btn btn-primary">Login</a>
+            <a href="/signup" class="btn btn-primary">Register</a>
+            <a href="/admin/login" class="btn btn-admin">🛡️ Admin Access</a>
+        </div>
+    {{/if}}
+
+    <!-- Internal Chatbot Protection -->
+    <script src="/public/js/chatbot-blocker.js"></script>
+    
+    <!-- Internal Chatbot Widget -->
+    <script src="/public/js/chatbot.js"></script>
 </body>
 </html>
