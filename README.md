@@ -2,6 +2,12 @@
 
 A complete authentication system built with Node.js, Express, MongoDB, and integrated with ChatGPT for intelligent assistance.
 
+## 📍 **GitHub Repository**
+
+**🔗 [https://github.com/bakora28/login-signup-system](https://github.com/bakora28/login-signup-system)**
+
+---
+
 ## 🚀 Features
 
 - **Complete Authentication System**: Secure login/signup with JWT tokens
@@ -246,7 +252,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🌟 Demo
 
-Visit the live demo: [Your Render URL will be here after deployment]
+**📁 Source Code**: [https://github.com/bakora28/login-signup-system](https://github.com/bakora28/login-signup-system)
+
+**🌐 Live Demo**: [Your Render URL will be here after deployment]
 
 ---
 
