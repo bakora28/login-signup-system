@@ -108,16 +108,32 @@ async function uploadProfilePicture() {
                 }
             }
             
-            showNotification('Profile picture updated successfully!', 'success');
+            // Show success message with storage type info
+            const storageType = result.storageType || 'local';
+            const storageMessage = storageType === 's3' ? ' (stored in AWS S3)' : ' (stored locally)';
+            showNotification(`Profile picture updated successfully!${storageMessage}`, 'success');
+            
+            // Log storage information
+            console.log('Profile picture uploaded:', {
+                url: result.profilePictureUrl,
+                storageType: storageType,
+                fileSize: file.size,
+                mimeType: file.type
+            });
             
             // Update progress bar
             updateProfileCompletion();
+            
+            // Clear file input
+            fileInput.value = '';
+            
         } else {
-            throw new Error('Failed to upload profile picture');
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to upload profile picture');
         }
     } catch (error) {
         console.error('Error uploading profile picture:', error);
-        showNotification('Failed to upload profile picture. Please try again.', 'error');
+        showNotification(`Failed to upload profile picture: ${error.message}`, 'error');
     } finally {
         showLoading(false);
     }

@@ -11,6 +11,11 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudfront": "^3.873.0",
+    "@aws-sdk/client-s3": "^3.873.0",
+    "@aws-sdk/client-sts": "^3.873.0",
+    "@aws-sdk/lib-storage": "^3.873.0",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
@@ -21,9 +26,13 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
     "multer": "^2.0.2",
+    "multer-s3": "^3.0.1",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.0.1",
     "openai": "^5.15.0",
+    "pg": "^8.16.3",
+    "puppeteer": "24.17.0",
+    "sharp": "^0.34.3",
     "uuid": "^11.1.0"
   }
 }

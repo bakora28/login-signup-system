@@ -61,6 +61,10 @@ app.use('/', chatbotRoutes)
 // Admin routes
 app.use('/', adminRoutes)
 
+// Email routes
+const emailRoutes = require('./email-routes')
+app.use('/api/email', emailRoutes)
+
 app.get('/', (req,res)=>{
     // Check if user is logged in
     const token = req.cookies?.token;
@@ -134,9 +138,12 @@ app.post("/signup", async (req, res) => {
         const jwt = require('jsonwebtoken');
         const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
         
+        // Get the created user from storage to get the correct ID field
+        const createdUser = await UserStorage.findOne({ email: data.email });
+        
         const token = jwt.sign(
             { 
-                id: data.email, // Using email as ID for simplicity
+                id: usingMongoDB ? createdUser._id : createdUser.id, // Use correct ID field
                 email: data.email,
                 name: data.name,
                 phoneNumber: data.phonenumber
@@ -193,7 +200,7 @@ app.post("/login", async (req, res) => {
             
             const token = jwt.sign(
                 { 
-                    id: user._id || user.id, // Use MongoDB _id or fallback to id
+                    id: usingMongoDB ? user._id : user.id, // Use correct ID field
                     email: user.email,
                     name: user.name,
                     phoneNumber: user.phonenumber

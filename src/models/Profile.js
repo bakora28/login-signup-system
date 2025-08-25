@@ -1,4 +1,4 @@
-// MongoDB Profile Model - Complete user profile data
+// MongoDB Profile Model - Complete user profile data with S3 support
 const mongoose = require('mongoose');
 
 const profileSchema = new mongoose.Schema({
@@ -46,17 +46,25 @@ const profileSchema = new mongoose.Schema({
         relationship: String
     },
     
-    // Profile media
+    // Profile media with S3 support
     profilePicture: {
         fileId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'File'
         },
         url: String,
+        s3Key: String, // S3 object key for deletion
+        storageType: {
+            type: String,
+            enum: ['local', 's3'],
+            default: 'local'
+        },
         uploadDate: {
             type: Date,
             default: Date.now
-        }
+        },
+        fileSize: Number,
+        mimeType: String
     },
     coverPhoto: {
         fileId: {
@@ -64,10 +72,18 @@ const profileSchema = new mongoose.Schema({
             ref: 'File'
         },
         url: String,
+        s3Key: String, // S3 object key for deletion
+        storageType: {
+            type: String,
+            enum: ['local', 's3'],
+            default: 'local'
+        },
         uploadDate: {
             type: Date,
             default: Date.now
-        }
+        },
+        fileSize: Number,
+        mimeType: String
     },
     
     // Privacy settings
@@ -171,6 +187,24 @@ profileSchema.statics.getFullProfile = async function(userId) {
 profileSchema.methods.incrementViews = async function() {
     this.profileViews += 1;
     return await this.save();
+};
+
+// Instance method to update profile picture with S3 support
+profileSchema.methods.updateProfilePicture = async function(pictureData) {
+    this.profilePicture = {
+        ...this.profilePicture,
+        ...pictureData,
+        uploadDate: new Date()
+    };
+    return await this.save();
+};
+
+// Instance method to get profile picture URL
+profileSchema.methods.getProfilePictureUrl = function() {
+    if (this.profilePicture && this.profilePicture.url) {
+        return this.profilePicture.url;
+    }
+    return null;
 };
 
 module.exports = mongoose.model('Profile', profileSchema);

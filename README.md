@@ -7,6 +7,7 @@ A complete authentication system built with Node.js, Express, MongoDB, and integ
 - **Complete Authentication System**: Secure login/signup with JWT tokens
 - **MongoDB Integration**: User data management with fallback to in-memory storage
 - **Profile Dashboard**: User profiles with file upload capabilities
+- **AWS S3 Integration**: Cloud storage for profile images with automatic fallback to local storage
 - **ChatGPT Integration**: AI-powered chatbot for user assistance
 - **Admin Dashboard**: Administrative interface for user management
 - **reCAPTCHA Protection**: Spam and bot protection
@@ -19,8 +20,9 @@ A complete authentication system built with Node.js, Express, MongoDB, and integ
 - **Authentication**: JWT, bcryptjs
 - **Frontend**: Handlebars (HBS), CSS3
 - **AI Integration**: OpenAI GPT
-- **File Upload**: Multer
+- **File Upload**: Multer, AWS S3
 - **Security**: reCAPTCHA, HTTP-only cookies
+- **Cloud Storage**: AWS S3 with local fallback
 
 ## 📦 Installation
 
@@ -51,6 +53,12 @@ A complete authentication system built with Node.js, Express, MongoDB, and integ
    RECAPTCHA_SITE_KEY=your_recaptcha_site_key
    RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
    
+   # AWS S3 (Optional - for cloud storage)
+   AWS_ACCESS_KEY_ID=your_aws_access_key_id
+   AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+   AWS_REGION=us-east-1
+   AWS_S3_BUCKET_NAME=your_s3_bucket_name
+   
    # Port (optional)
    PORT=3002
    ```
@@ -63,6 +71,22 @@ A complete authentication system built with Node.js, Express, MongoDB, and integ
    # Production mode
    npm start
    ```
+
+## ☁️ AWS S3 Setup (Optional)
+
+For cloud storage of profile images, follow the detailed setup guide in [AWS_S3_SETUP.md](./AWS_S3_SETUP.md).
+
+**Quick Setup:**
+1. Create an S3 bucket in AWS Console
+2. Create an IAM user with S3 permissions
+3. Add AWS credentials to your `.env` file
+4. Test configuration: `node test-s3-config.js`
+
+**Benefits:**
+- Global CDN access for faster image loading
+- Reduced server storage requirements
+- Automatic fallback to local storage if S3 unavailable
+- Scalable cloud storage solution
 
 ## 🌐 Deployment on Render
 
@@ -93,41 +117,42 @@ A complete authentication system built with Node.js, Express, MongoDB, and integ
    OPENAI_API_KEY=[Your OpenAI API key]
    RECAPTCHA_SITE_KEY=[Your reCAPTCHA site key]
    RECAPTCHA_SECRET_KEY=[Your reCAPTCHA secret key]
+   
+   # AWS S3 (Optional)
+   AWS_ACCESS_KEY_ID=[Your AWS access key]
+   AWS_SECRET_ACCESS_KEY=[Your AWS secret key]
+   AWS_REGION=[Your AWS region]
+   AWS_S3_BUCKET_NAME=[Your S3 bucket name]
    ```
 
 5. **Deploy**:
    - Click "Create Web Service"
    - Render will automatically deploy your application
 
-### MongoDB Setup for Production
+## 📁 File Storage Strategy
 
-For production, you'll need a cloud MongoDB instance:
+The system automatically handles file storage with intelligent fallback:
 
-1. **MongoDB Atlas** (Recommended):
-   - Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-   - Create a free cluster
-   - Get your connection string
-   - Add it to your Render environment variables as `MONGODB_URI`
+- **Primary Storage**: AWS S3 (when configured)
+- **Fallback Storage**: Local file system (always available)
+- **Automatic Cleanup**: Old files are automatically deleted when replaced
+- **File Validation**: Images only, 5MB size limit
+- **Metadata Tracking**: File size, type, upload date, and storage location
 
-2. **Alternative**: Use Render's managed PostgreSQL and adapt the code
+## 🔧 Configuration Files
 
-## 🔧 Configuration
+- **`src/aws-s3-config.js`**: AWS S3 configuration and client setup
+- **`src/upload-config.js`**: File upload configuration with S3 support
+- **`src/services/S3Service.js`**: S3 file operations service
+- **`src/services/ProfileMongoService.js`**: MongoDB profile operations with S3 integration
+- **`test-s3-config.js`**: S3 configuration test script
 
-### Environment Variables
+## 📖 Additional Documentation
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `PORT` | Server port (auto-set by Render) | No |
-| `NODE_ENV` | Environment mode | Yes |
-| `MONGODB_URI` | MongoDB connection string | Yes |
-| `JWT_SECRET` | JWT signing secret | Yes |
-| `OPENAI_API_KEY` | OpenAI API key for chatbot | No |
-| `RECAPTCHA_SITE_KEY` | reCAPTCHA site key | No |
-| `RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key | No |
-
-### Admin Access
-- **Default Email**: `admin@system.com`
-- **Default Password**: `admin123`
+- [AWS S3 Setup Guide](./AWS_S3_SETUP.md) - Complete S3 integration guide
+- [MongoDB Setup Guide](./MONGODB_SETUP.md) - Database configuration
+- [ChatGPT Integration](./CHATGPT_SETUP.md) - AI chatbot setup
+- [reCAPTCHA Setup](./RECAPTCHA_SETUP.md) - Security configuration
 
 ## 📱 Available Routes
 

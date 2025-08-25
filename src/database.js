@@ -45,8 +45,24 @@ class Database {
         try {
             const User = require('./models/User');
             
-            // Create initial admin user
-            await User.createInitialAdmin();
+            // Create initial admin user with proper password hashing
+            const adminExists = await User.findOne({ role: 'admin' });
+            
+            if (!adminExists) {
+                const admin = new User({
+                    name: 'Administrator',
+                    email: 'admin@system.com',
+                    password: 'admin123', // This will be hashed by the pre-save hook
+                    phonenumber: '+1234567890',
+                    role: 'admin',
+                    status: 'active'
+                });
+                
+                await admin.save();
+                console.log('✅ Created initial admin user with hashed password');
+            } else {
+                console.log('✅ Admin user already exists');
+            }
             
             // Create some test users if none exist
             const userCount = await User.countDocuments({ role: 'user' });
@@ -79,8 +95,12 @@ class Database {
                     }
                 ];
                 
-                await User.insertMany(testUsers);
-                console.log('✅ Created test users');
+                for (const userData of testUsers) {
+                    const user = new User(userData);
+                    await user.save(); // This will hash the password
+                }
+                
+                console.log('✅ Created test users with hashed passwords');
             }
             
             // Display current stats
