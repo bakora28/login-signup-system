@@ -162,7 +162,7 @@ router.get('/dashboard', authenticateWeb, async (req, res) => {
     }
 });
 
-// API Routes
+// ===================== API Routes ===================== //
 
 // Get Profile Data
 router.get('/api/profile', authenticateToken, async (req, res) => {
@@ -255,7 +255,6 @@ router.post('/api/profile/upload-picture', authenticateToken, upload.single('pro
             profilePictureUrl: profilePictureData.url,
             storageType: profilePictureData.storageType
         });
-        
     } catch (error) {
         console.error('Error uploading profile picture:', error);
         res.status(500).json({ error: 'Failed to upload profile picture' });
@@ -271,14 +270,13 @@ router.post('/api/profile/update', authenticateToken, async (req, res) => {
         const allowedFields = ['name', 'email', 'phoneNumber', 'bio'];
         const updates = {};
         
-        // Filter to only allowed fields
         allowedFields.forEach(field => {
             if (req.body[field] !== undefined) {
                 updates[field] = req.body[field];
             }
         });
         
-        // Security: Block any attempts to modify restricted fields
+        // Security: Block restricted fields
         const restrictedFields = ['status', 'role', 'isActive', 'permissions'];
         const hasRestrictedFields = restrictedFields.some(field => req.body[field] !== undefined);
         
@@ -316,8 +314,7 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
     try {
         const { setting, value } = req.body;
         
-        // Security: Prevent users from changing account status via preferences
-        if (setting === 'status' || setting === 'role' || setting === 'active') {
+        if (['status', 'role', 'active'].includes(setting)) {
             return res.status(403).json({ 
                 error: 'Account status and role changes are restricted to administrators only' 
             });
@@ -328,7 +325,6 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
             return res.status(404).json({ error: 'Profile not found' });
         }
         
-        // Update preferences
         if (!profile.preferences) {
             profile.preferences = {};
         }
@@ -350,7 +346,7 @@ router.post('/api/profile/update-preferences', authenticateToken, async (req, re
     }
 });
 
-// Security Route: Block any user attempts to change account status
+// Security Routes
 router.put('/api/profile/status', authenticateToken, (req, res) => {
     res.status(403).json({ 
         success: false,
